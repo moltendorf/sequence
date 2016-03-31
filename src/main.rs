@@ -15,12 +15,11 @@ fn main() {
 	path.push("settings.toml");
 
 	let mut file = match File::open(&path) {
-		Ok(file) => {
-			println!("Opening settings file: {}!", path.to_string_lossy());
-			file
-		},
+		Ok(file) => file,
 		Err(err) => panic!("No settings file found: {}!", path.to_string_lossy()),
 	};
+
+	println!("Opening settings file: {}!", path.to_string_lossy());
 
 	let mut input = String::new();
 	file.read_to_string(&mut input).unwrap();
