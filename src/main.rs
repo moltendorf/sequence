@@ -16,7 +16,7 @@ fn main() {
 
 	let mut file = match File::open(&path) {
 		Ok(file) => file,
-		Err(err) => panic!("No settings file found: {}!", path.to_string_lossy()),
+		Err(_) => panic!("No settings file found: {}!", path.to_string_lossy()),
 	};
 
 	println!("Opening settings file: {}!", path.to_string_lossy());
