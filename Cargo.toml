@@ -1,0 +1,9 @@
+[package]
+name = "sequence"
+version = "0.1.0"
+authors = ["Matthew Oltendorf <matthew@oltendorf.net>"]
+
+[dependencies]
+iron = "*"
+mysql = "*"
+toml = "*"
