@@ -1,35 +1,38 @@
 extern crate iron;
-extern crate toml;
 
-use std::env;
-use std::fs::File;
-use std::io::prelude::*;
+extern crate core;
+extern crate sequence;
+
+use core::str::FromStr;
+
+use std::net::SocketAddrV4;
+use std::net::SocketAddrV6;
 
 use iron::prelude::*;
 use iron::status;
 
+use sequence::root::settings;
+
 fn main() {
-	let mut path = env::home_dir().unwrap();
+	let address = settings::load().unwrap();
 
-	path.push(".sequence");
-	path.push("settings.toml");
-
-	let mut file = match File::open(&path) {
-		Ok(file) => file,
-		Err(_) => panic!("No settings file found: {}!", path.to_string_lossy()),
-	};
-
-	println!("Opening settings file: {}!", path.to_string_lossy());
-
-	let mut input = String::new();
-	file.read_to_string(&mut input).unwrap();
-
-	let value = toml::Parser::new(&input).parse().unwrap();
-	println!("{:?}", value);
+	println!("Opening iron server on: {}!", address);
 
 	fn hello_world(_: &mut Request) -> IronResult<Response> {
 		Ok(Response::with((status::Ok, "Hello Rust!")))
 	}
 
-//	Iron::new(hello_world).http("[::1]:8001").unwrap();
+	match SocketAddrV4::from_str(&address) {
+		Ok(socket) => {
+			Iron::new(hello_world).http(socket).unwrap();
+			()
+		},
+		Err(_) => match SocketAddrV6::from_str(&address) {
+			Ok(socket) => {
+				Iron::new(hello_world).http(socket).unwrap();
+				()
+			},
+			Err(_) => panic!("Could not parse address: {}", address)
+		}
+	}
 }
