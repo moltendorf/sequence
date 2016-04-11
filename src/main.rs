@@ -11,10 +11,12 @@ use std::net::SocketAddrV6;
 use iron::prelude::*;
 use iron::status;
 
-use sequence::root::settings;
+use sequence::root;
 
 fn main() {
-	let address = settings::load().unwrap();
+	let root = Root::new();
+
+	let address = root.settings.address;
 
 	println!("Opening iron server on: {}!", address);
 
