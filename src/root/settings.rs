@@ -4,14 +4,15 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
+use std::path::PathBuf;
 
 pub struct Settings {
 	address: String,
-	home: Path
+	home: &Path
 }
 
 impl Settings {
-	fn new() -> Settings {
+	pub fn new() -> Settings {
 		let mut path = match env::home_dir() {
 			Some(path) => path,
 			None => panic!("No home environment variable found!")
