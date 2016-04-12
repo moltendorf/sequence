@@ -3,14 +3,18 @@ pub mod settings;
 
 use self::settings::Settings;
 
-struct Root {
+pub struct Root {
 	settings: Settings
 }
 
 impl Root {
-	fn new() -> Root {
+	pub fn new() -> Root {
 		Root {
 			settings: Settings::new()
 		}
+	}
+
+	pub fn settings(&self) -> &Settings {
+		&self.settings
 	}
 }

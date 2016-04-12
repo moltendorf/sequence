@@ -3,12 +3,11 @@ extern crate toml;
 use std::env;
 use std::fs::File;
 use std::io::prelude::*;
-use std::path::Path;
 use std::path::PathBuf;
 
 pub struct Settings {
 	address: String,
-	home: &Path
+	home: PathBuf
 }
 
 impl Settings {
@@ -18,7 +17,7 @@ impl Settings {
 			None => panic!("No home environment variable found!")
 		};
 
-		let home = path.as_path();
+		let home = path.clone();
 
 		path.push(".sequence");
 		path.push("settings.toml");
@@ -40,7 +39,7 @@ impl Settings {
 		let table = toml::Parser::new(&input).parse();
 
 		let address = table.as_ref().and_then(
-			|t| t.get("http")).and_then(
+			|t| t.get("httpd")).and_then(
 			|v| v.as_table()).and_then(
 			|t| t.get("address")).and_then(
 			|v| v.as_str());
@@ -54,5 +53,13 @@ impl Settings {
 			address: address,
 			home: home
 		}
+	}
+
+	pub fn address(&self) -> &String {
+		&self.address
+	}
+
+	pub fn home(&self) -> &PathBuf {
+		&self.home
 	}
 }
