@@ -12,42 +12,22 @@ pub struct Settings {
 
 impl Settings {
 	pub fn new() -> Settings {
-		let mut path = match env::home_dir() {
-			Some(path) => path,
-			None => panic!("No home environment variable found!")
-		};
-
+		let mut path = env::home_dir().expect("No home environment variable found!");
 		let home = path.clone();
 
 		path.push(".sequence");
 		path.push("settings.toml");
 
-		let mut file = match File::open(&path) {
-			Ok(file) => file,
-			Err(_) => panic!("No settings file found: {}!", path.to_string_lossy()),
-		};
+		println!("Opening settings: \"{}\"!", path.to_string_lossy());
 
-		println!("Opening settings file: {}!", path.to_string_lossy());
-
+		let mut file = File::open(&path).expect("Could not find settings!");
 		let mut input = String::new();
 
-		match file.read_to_string(&mut input) {
-			Ok(_) => (),
-			Err(_) => panic!("Could not read settings file: {}!", path.to_string_lossy())
-		};
+		file.read_to_string(&mut input).expect("Could not read settings!");
 
-		let table = toml::Parser::new(&input).parse();
-
-		let address = table.as_ref().and_then(
-			|t| t.get("httpd")).and_then(
-			|v| v.as_table()).and_then(
-			|t| t.get("address")).and_then(
-			|v| v.as_str());
-
-		let address = match address {
-			Some(address) => address.to_string(),
-			None => panic!("Could not get address from settings file: {}!", path.to_string_lossy())
-		};
+		let table: toml::Value = input.parse().expect("Could not parse settings!");
+		let address = table.lookup("httpd.address").expect("Could not find address in settings!");
+		let address = address.as_str().expect("Invalid type for address in settings!").to_string();
 
 		Settings {
 			address: address,
