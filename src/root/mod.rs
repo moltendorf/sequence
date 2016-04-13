@@ -4,17 +4,17 @@ pub mod settings;
 use self::settings::Settings;
 
 pub struct Root {
-	settings: Settings
+  settings: Settings
 }
 
 impl Root {
-	pub fn new() -> Root {
-		Root {
-			settings: Settings::new()
-		}
-	}
+  pub fn new() -> Root {
+    Root {
+      settings: Settings::new()
+    }
+  }
 
-	pub fn settings(&self) -> &Settings {
-		&self.settings
-	}
+  pub fn settings(&self) -> &Settings {
+    &self.settings
+  }
 }
