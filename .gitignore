@@ -5,7 +5,11 @@
 *.iml
 
 ## Directory-based project format:
-.idea/
+.idea/*
+
+# Keep these files.
+!.idea/codeStyleSettings.xml
+
 # if you remove the above rule, at least ignore the following:
 
 # User-specific stuff:
