@@ -16,7 +16,7 @@ use sequence::root::Root;
 fn main() {
 	let root = Root::new();
 
-	let address = root.settings.address();
+	let address = root.settings().address();
 
 	println!("Opening iron server on: {}!", address);
 
