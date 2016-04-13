@@ -18,7 +18,7 @@ fn main() {
 
   let address = root.settings().address();
 
-  println!("Opening iron server on: {}!", address);
+  println!("Opening iron server on \"{}\"", address);
 
   fn hello_world(_: &mut Request) -> IronResult<Response> {
     Ok(Response::with((status::Ok, "Hello Rust!")))
@@ -34,7 +34,7 @@ fn main() {
         Iron::new(hello_world).http(socket).unwrap();
         ()
       },
-      Err(_) => panic!("Could not parse address: {}", address)
+      Err(_) => panic!("Could not parse address \"{}\"", address)
     }
   }
 }
