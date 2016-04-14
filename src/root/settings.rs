@@ -22,7 +22,7 @@ impl Settings {
     path.push(".sequence");
     path.push("settings.toml");
 
-    println!("Opening settings: \"{}\"", path.to_string_lossy());
+    println!("Opening settings \"{}\"", path.to_string_lossy());
 
     let mut file = File::open(&path).expect("Could not find settings");
     let mut input = String::new();
