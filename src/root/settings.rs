@@ -35,8 +35,8 @@ impl Settings {
     }
   }
 
-  pub fn lookup(&self, key: String) -> &Option<&Value> {
-    &self.table.lookup(&key)
+  pub fn lookup<'a>(&'a self, key: &'a str) -> Option<&Value> {
+    self.table.lookup(key)
   }
 
   pub fn home(&self) -> &PathBuf {
