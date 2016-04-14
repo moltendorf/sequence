@@ -1,17 +1,21 @@
 extern crate toml;
 
+use super::Root;
+
+use self::toml::Value;
+
 use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
 
 pub struct Settings {
-  address: String,
-  home: PathBuf
+  home: PathBuf,
+  table: Value
 }
 
 impl Settings {
-  pub fn new() -> Settings {
+  pub fn new(root: &Root) -> Settings {
     let mut path = env::home_dir().expect("No home environment variable found");
     let home = path.clone();
 
@@ -25,18 +29,14 @@ impl Settings {
 
     file.read_to_string(&mut input).expect("Could not read settings");
 
-    let table: toml::Value = input.parse().expect("Could not parse settings");
-    let address = table.lookup("httpd.address").expect("Could not find address in settings");
-    let address = address.as_str().expect("Invalid type for address in settings").to_string();
-
     Settings {
-      address: address,
-      home: home
+      home: home,
+      table: input.parse().expect("Could not parse settings")
     }
   }
 
-  pub fn address(&self) -> &String {
-    &self.address
+  pub fn lookup(&self, key: String) -> &Option<&Value> {
+    &self.table.lookup(&key)
   }
 
   pub fn home(&self) -> &PathBuf {
