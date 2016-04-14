@@ -9,8 +9,8 @@ Sequence is in alpha right now and is not really stable. It is mostly being used
 
 ## Code Style
 
-Sequence is indented with 2 spaces and wraps after the 136th column for all code files. All files must end with a newline.
+Sequence is indented with 2 spaces and wraps after the 128th column for all code files. All files must end with a newline.
 
 Why spaces? GitHub uses 8 spaces per tab in code previews which would cause code to show up differently.
   
-Why 136 columns? GitHub code preview is sized to fit almost exactly 136 characters in width. 
+Why 128 columns? Because at 10pt font, you can fit three files on a 2560x1440 monitor. Also, GitHub code viewer.
