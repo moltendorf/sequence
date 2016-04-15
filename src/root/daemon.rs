@@ -4,7 +4,9 @@ use super::Root;
 
 use self::iron::prelude::*;
 use self::iron::status;
+use self::iron::Listening;
 
+use std::error::Error;
 use std::net::SocketAddrV4;
 use std::net::SocketAddrV6;
 
@@ -28,7 +30,7 @@ impl Daemon {
 }
 
 impl Daemon {
-  pub fn listen(&self) {
+  pub fn listen<'a>(&'a self) -> Result<(), &'a str> {
     let address = self.settings.address();
 
     println!("Opening iron server on \"{}\"", address);
@@ -37,13 +39,19 @@ impl Daemon {
       Ok(Response::with((status::Ok, "Hello Rust!")))
     }
 
-    if let Ok(address) = address.parse::<SocketAddrV6>() {
-      Iron::new(hello_world).http(address).unwrap();
-    } else if let Ok(address) = address.parse::<SocketAddrV4>() {
-      Iron::new(hello_world).http(address).unwrap();
+    if let Ok(address) = address.parse::<SocketAddrV4>() {
+      if let Err(error) = Iron::new(hello_world).http::<Result<(), &'a Error>>(address) {
+        return Err(error.description());
+      }
+    } else if let Ok(address) = address.parse::<SocketAddrV6>() {
+      if let Err(error) = Iron::new(hello_world).http::<Result<(), &'a Error>>(address) {
+        return Err(error.description());
+      }
+    } else {
+      return Err("invalid address")
     }
 
-    panic!("Could not parse address");
+    Ok(())
   }
 
   pub fn settings(&self) -> &Settings {
