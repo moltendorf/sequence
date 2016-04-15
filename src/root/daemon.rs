@@ -37,19 +37,13 @@ impl Daemon {
       Ok(Response::with((status::Ok, "Hello Rust!")))
     }
 
-    let socket: Result<SocketAddrV6, _> = address.parse();
-
-    if let Ok(socket) = socket {
-      Iron::new(hello_world).http(socket).unwrap();
+    if let Ok(address) = address.parse::<SocketAddrV6>() {
+      Iron::new(hello_world).http(address).unwrap();
+    } else if let Ok(address) = address.parse::<SocketAddrV4>() {
+      Iron::new(hello_world).http(address).unwrap();
     }
 
-    let socket: Result<SocketAddrV4, _> = address.parse();
-
-    if let Ok(socket) = socket {
-      Iron::new(hello_world).http(socket).unwrap();
-    }
-
-    panic!("Could not parse address \"{}\"", address)
+    panic!("Could not parse address");
   }
 
   pub fn settings(&self) -> &Settings {
