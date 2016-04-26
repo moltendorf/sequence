@@ -39,6 +39,13 @@ impl Settings {
     self.table.lookup(key)
   }
 
+  pub fn contains_key<'a>(&'a self, key: &'a str) -> bool {
+    match self.table.lookup(key) {
+      Some(_) => true,
+      None => false
+    }
+  }
+
   pub fn home(&self) -> &PathBuf {
     &self.home
   }
