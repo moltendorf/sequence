@@ -19,7 +19,7 @@ pub struct Root<'a> {
 }
 
 impl<'a> Root<'a> {
-  pub fn new<'b>() -> Root<'b> {
+  pub fn new() -> Root<'a> {
     let settings = Settings::new();
     let database = Database::new(&settings);
     let provider = Provider::new(&database);
