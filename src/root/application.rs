@@ -1,11 +1,11 @@
 use super::provider::Provider;
 
-pub struct Application {
-  provider: &Provider
+pub struct Application<'a> {
+  provider: &'a Provider<'a>
 }
 
-impl Application {
-  pub fn new(provider: Provider) -> Application {
+impl<'a> Application<'a> {
+  pub fn new<'b>(provider: &'b Provider) -> Application<'b> {
     Application {
       provider: provider
     }

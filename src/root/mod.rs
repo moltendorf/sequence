@@ -14,6 +14,7 @@ pub struct Root {
   application: Application,
   daemon: Daemon,
   database: Database,
+  provider: Provider,
   settings: Settings
 }
 
