@@ -10,16 +10,16 @@ use self::database::Database;
 use self::provider::Provider;
 use self::settings::Settings;
 
-pub struct Root {
-  application: Application,
+pub struct Root<'a> {
+  application: Application<'a>,
   daemon: Daemon,
   database: Database,
-  provider: Provider,
+  provider: Provider<'a>,
   settings: Settings
 }
 
-impl Root {
-  pub fn new() -> Root {
+impl<'a> Root<'a> {
+  pub fn new<'b>() -> Root<'b> {
     let settings = Settings::new();
     let database = Database::new(&settings);
     let provider = Provider::new(&database);
