@@ -24,7 +24,7 @@ impl Daemon {
   }
 
   pub fn listen(&self) {
-    let address = self.settings.address();
+    let address = &self.address;
 
     println!("Opening iron server on \"{}\"", address);
 
