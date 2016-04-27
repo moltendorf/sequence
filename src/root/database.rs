@@ -1,6 +1,6 @@
 extern crate mysql;
 
-use super::Root;
+use super::settings::Settings;
 
 use self::mysql::Opts;
 use self::mysql::OptsBuilder;
@@ -11,9 +11,7 @@ pub struct Database {
 }
 
 impl Database {
-  pub fn new(root: &Root) -> Database {
-    let settings = root.settings();
-
+  pub fn new(settings: &Settings) -> Database {
     let mut builder = OptsBuilder::new();
 
     if let Some(socket) = settings.lookup("database.socket").map(|v| v.as_str()) {

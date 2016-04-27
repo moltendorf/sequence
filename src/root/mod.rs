@@ -1,41 +1,56 @@
+pub mod application;
 pub mod database;
 pub mod daemon;
+pub mod provider;
 pub mod settings;
 
+use self::application::Application;
 use self::daemon::Daemon;
 use self::database::Database;
+use self::provider::Provider;
 use self::settings::Settings;
 
 pub struct Root {
-  daemon: Option<Daemon>,
-  database: Option<Database>,
-  settings: Option<Settings>
+  application: Application,
+  daemon: Daemon,
+  database: Database,
+  settings: Settings
 }
 
 impl Root {
   pub fn new() -> Root {
-    let mut root = Root {
-      daemon: None,
-      database: None,
-      settings: None
-    };
+    let settings = Settings::new();
+    let database = Database::new(&settings);
+    let provider = Provider::new(&database);
+    let application = Application::new(&provider);
+    let daemon = Daemon::new(&settings, &provider);
 
-    root.settings = Some(Settings::new(&root));
-    root.database = Some(Database::new(&root));
-    root.daemon = Some(Daemon::new(&root));
+    Root {
+      application: application,
+      daemon: daemon,
+      database: database,
+      provider: provider,
+      settings: settings
+    }
+  }
 
-    root
+  pub fn application(&self) -> &Application {
+    &self.application
   }
 
   pub fn database(&self) -> &Database {
-    &self.database.as_ref().unwrap()
+    &self.database
   }
 
   pub fn daemon(&self) -> &Daemon {
-    &self.daemon.as_ref().unwrap()
+    &self.daemon
+  }
+
+  pub fn provider(&self) -> &Provider {
+    &self.provider
   }
 
   pub fn settings(&self) -> &Settings {
-    &self.settings.as_ref().unwrap()
+    &self.settings
   }
 }

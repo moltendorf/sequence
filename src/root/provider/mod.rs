@@ -1,13 +1,13 @@
-use super::Root;
+use super::database::Database;
 
 pub struct Provider {
-  root: &Root
+  database: &Database
 }
 
 impl Provider {
-  pub fn new(root: &Root) -> Provider {
+  pub fn new(database: &Database) -> Provider {
     Provider {
-      root: root
+      database: database
     }
   }
 }

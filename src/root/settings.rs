@@ -1,7 +1,5 @@
 extern crate toml;
 
-use super::Root;
-
 use self::toml::Value;
 
 use std::env;
@@ -15,7 +13,7 @@ pub struct Settings {
 }
 
 impl Settings {
-  pub fn new(root: &Root) -> Settings {
+  pub fn new() -> Settings {
     let mut path = env::home_dir().expect("No home environment variable found");
     let home = path.clone();
 
