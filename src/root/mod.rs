@@ -30,15 +30,16 @@ impl Root {
       settings: None
     };
 
-    let reference = Rc::new(root);
+    let strong = Rc::new(root);
+    let weak = Rc::downgrade(&strong);
 
-    root.settings = Some(Settings::new(Rc::downgrade(&reference)));
-    root.database = Some(Database::new(Rc::downgrade(&reference)));
-    root.provider = Some(Provider::new(Rc::downgrade(&reference)));
-    root.application = Some(Application::new(Rc::downgrade(&reference)));
-    root.daemon = Some(Daemon::new(Rc::downgrade(&reference)));
+    root.settings = Some(Settings::new(weak.clone()));
+    root.database = Some(Database::new(weak.clone()));
+    root.provider = Some(Provider::new(weak.clone()));
+    root.application = Some(Application::new(weak.clone()));
+    root.daemon = Some(Daemon::new(weak.clone()));
 
-    reference
+    strong
   }
 
   pub fn application(&self) -> &Application {
