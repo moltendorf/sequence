@@ -1,17 +1,22 @@
 extern crate mysql;
 
-use super::settings::Settings;
+use super::Root;
 
 use self::mysql::Opts;
 use self::mysql::OptsBuilder;
 use self::mysql::Pool;
+
+use std::rc::Weak;
 
 pub struct Database {
   pool: Pool
 }
 
 impl Database {
-  pub fn new(settings: &Settings) -> Database {
+  pub fn new(root: Weak<Root>) -> Database {
+    let root = root.upgrade().unwrap();
+    let settings = root.settings();
+
     let mut builder = OptsBuilder::new();
 
     if let Some(socket) = settings.lookup("database.socket").map(|v| v.as_str()) {

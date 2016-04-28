@@ -1,13 +1,15 @@
-use super::provider::Provider;
+use super::Root;
 
-pub struct Application<'a> {
-  provider: &'a Provider<'a>
+use std::rc::Weak;
+
+pub struct Application {
+  root: Weak<Root>
 }
 
-impl<'a> Application<'a> {
-  pub fn new<'b>(provider: &'b Provider) -> Application<'b> {
+impl Application {
+  pub fn new(root: Weak<Root>) -> Application {
     Application {
-      provider: provider
+      root: root
     }
   }
 }

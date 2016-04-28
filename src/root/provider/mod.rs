@@ -1,13 +1,15 @@
-use super::database::Database;
+use super::Root;
 
-pub struct Provider<'a> {
-  database: &'a Database
+use std::rc::Weak;
+
+pub struct Provider {
+  root: Weak<Root>
 }
 
-impl<'a> Provider<'a> {
-  pub fn new<'b>(database: &'b Database) -> Provider<'b> {
+impl Provider {
+  pub fn new(root: Weak<Root>) -> Provider {
     Provider {
-      database: database
+      root: root
     }
   }
 }

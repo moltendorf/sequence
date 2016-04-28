@@ -10,48 +10,54 @@ use self::database::Database;
 use self::provider::Provider;
 use self::settings::Settings;
 
-pub struct Root<'a> {
-  application: Application<'a>,
-  daemon: Daemon,
-  database: Database,
-  provider: Provider<'a>,
-  settings: Settings
+use std::rc::Rc;
+
+pub struct Root {
+  application: Option<Application>,
+  daemon: Option<Daemon>,
+  database: Option<Database>,
+  provider: Option<Provider>,
+  settings: Option<Settings>
 }
 
-impl<'a> Root<'a> {
-  pub fn new() -> Root<'a> {
-    let settings = Settings::new();
-    let database = Database::new(&settings);
-    let provider = Provider::new(&database);
-    let application = Application::new(&provider);
-    let daemon = Daemon::new(&settings, &provider);
+impl Root {
+  pub fn new() -> Rc<Root> {
+    let mut root = Root {
+      application: None,
+      daemon: None,
+      database: None,
+      provider: None,
+      settings: None
+    };
 
-    Root {
-      application: application,
-      daemon: daemon,
-      database: database,
-      provider: provider,
-      settings: settings
-    }
+    let reference = Rc::new(root);
+
+    root.settings = Some(Settings::new(Rc::downgrade(&reference)));
+    root.database = Some(Database::new(Rc::downgrade(&reference)));
+    root.provider = Some(Provider::new(Rc::downgrade(&reference)));
+    root.application = Some(Application::new(Rc::downgrade(&reference)));
+    root.daemon = Some(Daemon::new(Rc::downgrade(&reference)));
+
+    reference
   }
 
   pub fn application(&self) -> &Application {
-    &self.application
+    &self.application.as_ref().unwrap()
   }
 
   pub fn database(&self) -> &Database {
-    &self.database
+    &self.database.as_ref().unwrap()
   }
 
   pub fn daemon(&self) -> &Daemon {
-    &self.daemon
+    &self.daemon.as_ref().unwrap()
   }
 
   pub fn provider(&self) -> &Provider {
-    &self.provider
+    &self.provider.as_ref().unwrap()
   }
 
   pub fn settings(&self) -> &Settings {
-    &self.settings
+    &self.settings.as_ref().unwrap()
   }
 }

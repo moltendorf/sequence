@@ -1,11 +1,14 @@
 extern crate toml;
 
+use super::Root;
+
 use self::toml::Value;
 
 use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
+use std::rc::Weak;
 
 pub struct Settings {
   home: PathBuf,
@@ -13,7 +16,7 @@ pub struct Settings {
 }
 
 impl Settings {
-  pub fn new() -> Settings {
+  pub fn new(root: Weak<Root>) -> Settings {
     let mut path = env::home_dir().expect("No home environment variable found");
     let home = path.clone();
 
