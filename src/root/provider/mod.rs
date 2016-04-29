@@ -1,3 +1,7 @@
+mod preferences;
+
+pub use self::preferences::Preferences;
+
 use super::Root;
 
 use std::rc::Weak;
