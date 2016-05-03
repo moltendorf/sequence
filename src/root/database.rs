@@ -25,12 +25,12 @@ impl Database {
       builder.unix_addr(socket);
     } else {
       // Can be optional.
-      let host = settings.lookup("database.host").and_then(|v| v.as_str().map(|v| v.to_string()));
+      let host = settings.lookup("database.host").and_then(|v| v.as_str().map(|v| v.to_string())).unwrap_or("[::]".to_string());
 
       // Must exist.
       let port = settings.lookup("database.port").and_then(|v| v.as_integer()).unwrap_or(3306) as u16;
 
-      builder.ip_or_hostname(host).tcp_port(port);
+      builder.ip_or_hostname(Some(host)).tcp_port(port);
     }
 
     // Can be optional.
