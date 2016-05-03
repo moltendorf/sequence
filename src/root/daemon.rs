@@ -5,6 +5,7 @@ use super::Root;
 use self::iron::prelude::*;
 use self::iron::status;
 
+use std::cell::RefCell;
 use std::net::SocketAddrV4;
 use std::net::SocketAddrV6;
 use std::rc::Weak;
@@ -14,8 +15,9 @@ pub struct Daemon {
 }
 
 impl Daemon {
-  pub fn new(root: Weak<Root>) -> Daemon {
-    let root = root.upgrade().unwrap();
+  pub fn new(root: Weak<RefCell<Root>>) -> Daemon {
+    let strong = root.upgrade().unwrap();
+    let root = strong.borrow();
     let settings = root.settings();
 
     let address = settings.lookup("daemon.address").expect("Could not find address in settings");

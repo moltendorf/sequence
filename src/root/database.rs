@@ -6,6 +6,7 @@ use self::mysql::Opts;
 use self::mysql::OptsBuilder;
 use self::mysql::Pool;
 
+use std::cell::RefCell;
 use std::rc::Weak;
 
 pub struct Database {
@@ -13,8 +14,9 @@ pub struct Database {
 }
 
 impl Database {
-  pub fn new(root: Weak<Root>) -> Database {
-    let root = root.upgrade().unwrap();
+  pub fn new(root: Weak<RefCell<Root>>) -> Database {
+    let strong = root.upgrade().unwrap();
+    let root = strong.borrow();
     let settings = root.settings();
 
     let mut builder = OptsBuilder::new();

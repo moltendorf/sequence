@@ -10,6 +10,7 @@ use self::database::Database;
 use self::provider::Provider;
 use self::settings::Settings;
 
+use std::cell::RefCell;
 use std::rc::Rc;
 
 pub struct Root {
@@ -21,23 +22,31 @@ pub struct Root {
 }
 
 impl Root {
-  pub fn new() -> Rc<Root> {
-    let mut root = Root {
+  pub fn new() -> Rc<RefCell<Root>> {
+    let mut strong = Rc::new(RefCell::new(Root {
       application: None,
       daemon: None,
       database: None,
       provider: None,
       settings: None
-    };
+    }));
 
-    let strong = Rc::new(root);
     let weak = Rc::downgrade(&strong);
 
-    root.settings = Some(Settings::new(weak.clone()));
-    root.database = Some(Database::new(weak.clone()));
-    root.provider = Some(Provider::new(weak.clone()));
-    root.application = Some(Application::new(weak.clone()));
-    root.daemon = Some(Daemon::new(weak.clone()));
+    let settings = Some(Settings::new(weak.clone()));
+    strong.borrow_mut().settings = settings;
+
+    let database = Some(Database::new(weak.clone()));
+    strong.borrow_mut().database = database;
+
+    let provider = Some(Provider::new(weak.clone()));
+    strong.borrow_mut().provider = provider;
+
+    let application = Some(Application::new(weak.clone()));
+    strong.borrow_mut().application = application;
+
+    let daemon = Some(Daemon::new(weak.clone()));
+    strong.borrow_mut().daemon = daemon;
 
     strong
   }
