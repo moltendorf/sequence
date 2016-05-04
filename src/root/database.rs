@@ -10,7 +10,8 @@ use std::cell::RefCell;
 use std::rc::Weak;
 
 pub struct Database {
-  pool: Pool
+  pool: Pool,
+  prefix: String
 }
 
 impl Database {
@@ -49,8 +50,13 @@ impl Database {
     println!("Opening mysql connection on \"{}\"", method);
 
     Database {
+      prefix: settings.lookup("database.prefix").and_then(|v| v.as_str()).unwrap_or("sequence__").to_string(),
       pool: Pool::new(Opts::from(builder)).unwrap()
     }
+  }
+
+  pub fn prefix(&self, suffix: &str) -> String {
+    format!("{}{}", &self.prefix, suffix)
   }
 
   pub fn pool(&self) -> &Pool {
