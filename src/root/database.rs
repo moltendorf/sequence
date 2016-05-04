@@ -21,14 +21,20 @@ impl Database {
 
     let mut builder = OptsBuilder::new();
 
+    let method: String;
+
     if let Some(socket) = settings.lookup("database.socket").and_then(|v| v.as_str()) {
       builder.unix_addr(Some(socket));
+
+      method = socket.to_string();
     } else {
       // Can be optional.
       let host = settings.lookup("database.host").and_then(|v| v.as_str().map(|v| v.to_string())).unwrap_or("[::]".to_string());
 
       // Must exist.
       let port = settings.lookup("database.port").and_then(|v| v.as_integer()).unwrap_or(3306) as u16;
+
+      method = format!("{}:{}", host, port);
 
       builder.ip_or_hostname(Some(host)).tcp_port(port);
     }
@@ -39,6 +45,8 @@ impl Database {
     let database = settings.lookup("database.database").and_then(|v| v.as_str());
 
     builder.user(username).pass(password).db_name(database);
+
+    println!("Opening mysql connection on \"{}\"", method);
 
     Database {
       pool: Pool::new(Opts::from(builder)).unwrap()
