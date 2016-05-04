@@ -23,7 +23,7 @@ pub struct Root {
 
 impl Root {
   pub fn new() -> Rc<RefCell<Root>> {
-    let mut strong = Rc::new(RefCell::new(Root {
+    let strong = Rc::new(RefCell::new(Root {
       application: None,
       daemon: None,
       database: None,
