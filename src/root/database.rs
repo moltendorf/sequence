@@ -21,8 +21,8 @@ impl Database {
 
     let mut builder = OptsBuilder::new();
 
-    if let Some(socket) = settings.lookup("database.socket").map(|v| v.as_str()) {
-      builder.unix_addr(socket);
+    if let Some(socket) = settings.lookup("database.socket").and_then(|v| v.as_str()) {
+      builder.unix_addr(Some(socket));
     } else {
       // Can be optional.
       let host = settings.lookup("database.host").and_then(|v| v.as_str().map(|v| v.to_string())).unwrap_or("[::]".to_string());
