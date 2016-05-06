@@ -31,7 +31,7 @@ impl Preferences {
     preferences
   }
 
-  pub fn load(&self) {
+  fn load(&self) {
     let strong = &self.root.upgrade().unwrap();
     let root = strong.borrow();
     let pool = root.database().pool();
