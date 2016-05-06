@@ -31,6 +31,14 @@ impl Preferences {
     preferences
   }
 
+  pub fn get(self, key: &String) -> Option<String> {
+    // @todo How to return a reference instead of a clone?
+    match self.map.borrow().get(key) {
+      Some(value) => Some(value.clone()),
+      None => None
+    }
+  }
+
   fn load(&self) {
     let strong = &self.root.upgrade().unwrap();
     let root = strong.borrow();
