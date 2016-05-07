@@ -47,7 +47,7 @@ impl Preferences {
     let mut map = self.map.borrow_mut();
 
     // @todo Figure out what the heck is going on here. I just hacked an example and made it work.
-    let r: Vec<()> = pool.prep_exec(format!("SELECT preference_key, preference_value FROM {}", &self.table), ()).map(
+    let r: Vec<()> = pool.prep_exec(sql_select_preferences(&self.table), ()).map(
       |result| result.map(|x| x.unwrap()).map(|row| {
         let (preference_key, preference_value) = mysql::from_row(row);
 
@@ -55,4 +55,11 @@ impl Preferences {
       }).collect()
     ).unwrap();
   }
+}
+
+fn sql_select_preferences(table: &String) -> String {
+  format!(
+  "SELECT preference_key, preference_value
+   FROM {}",
+  &table)
 }
